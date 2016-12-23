@@ -2,6 +2,7 @@
 set -eo pipefail
 
 backup_tool="gsutil"
+backup_options="rsync -r"
 
 # verify variables
 if [ -z "$GS_ACCESS_KEY" -o -z "$GS_SECRET_KEY" -o -z "$GS_URL" -o -z "$POSTGRES_HOST" -o -z "$POSTGRES_PORT" -o -z "$POSTGRES_DB" ]; then
@@ -26,7 +27,7 @@ chmod 0600 ~/.pgpass
 
 DB_URI="postgresql://$POSTGRES_USER@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB"
 # add a cron job
-echo "$CRON_SCHEDULE root rm -rf /tmp/dump* && pg_dumpall --dbname=$DB_URI --file=/tmp/dump.sql --verbose >> /var/log/cron.log 2>&1 && gzip -c /tmp/dump.sql > /tmp/dump && $backup_tool mv /tmp/dump gs://$GS_URL/ >> /var/log/cron.log 2>&1 && rm -rf /tmp/dump*" >> /etc/crontab
+echo "$CRON_SCHEDULE root rm -rf /tmp/dump* && pg_dumpall --dbname=$DB_URI --file=/tmp/dump.sql --verbose >> /var/log/cron.log 2>&1 && gzip -c /tmp/dump.sql > /tmp/dump && $backup_tool $backup_options /tmp/dump gs://$GS_URL/ >> /var/log/cron.log 2>&1 && rm -rf /tmp/dump*" >> /etc/crontab
 crontab /etc/crontab
 
 exec "$@"
