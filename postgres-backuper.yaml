@@ -1,0 +1,54 @@
+#
+# PostgreSQL backuper
+#
+# Set proper POSTGRES_PASSWORD, GS_ACCESS_KEY, GS_SECRET_KEY, GS_URL 
+#
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: APP_NAME-postgres-backuper
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: APP_NAME-postgres-backuper
+        role: client
+        tier: backend
+    spec:
+      containers:
+      - name: APP_NAME-postgres-backuper
+        image: ackee/postgres-backup-to-gs:latest
+        env:
+        # TimeZone for proper cron scheduling execution
+        - name: POSTGRES_PASSWORD
+          value: "ENTER_PASSWORD"
+        - name: POSTGRES_USER
+          value: "postgres"
+        # PostgreSQL host container domain name
+        - name: POSTGRES_HOST
+          value: "postgres"
+        # Google Cloud Storage credentials
+        - name: GS_ACCESS_KEY
+          value: "ENTER_GS_ACCESS_KEY"
+        - name: GS_SECRET_KEY
+          value: "ENTER_GS_SECRET_KEY"
+        - name: GS_URL
+          value: "bucket-name/PROJECT_NAME/APP_NAME/ENV_NAME/postgres"
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_DB
+          value: "ENTER_DB_NAME"
+        # You might want to tweak the resources a bit according to the size of your db
+        resources:
+          requests:
+            cpu: 3m
+            memory: 16Mi
+          limits: 
+            cpu: 15m
+            memory: 64Mi
+        ports:
+          - containerPort: 5432
+      # allow to run only on certain cluster node
+      nodeSelector:
+        cloud.google.com/gke-nodepool: default-pool
