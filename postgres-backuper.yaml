@@ -47,8 +47,6 @@ spec:
           limits: 
             cpu: 15m
             memory: 64Mi
-        ports:
-          - containerPort: 5432
       # allow to run only on certain cluster node
       nodeSelector:
         cloud.google.com/gke-nodepool: default-pool
