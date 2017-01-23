@@ -2,7 +2,7 @@
 set -eo pipefail
 
 backup_tool="gsutil"
-backup_options="rsync -r"
+backup_options="-m rsync -r"
 
 # verify variables
 if [ -z "$GS_ACCESS_KEY" -o -z "$GS_SECRET_KEY" -o -z "$GS_URL" -o -z "$POSTGRES_HOST" -o -z "$POSTGRES_PORT" -o -z "$POSTGRES_DB" ]; then
