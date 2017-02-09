@@ -11,7 +11,5 @@ Following ENV variables must be specified:
  - `POSTGRES_PASSWORD` password of user `POSTGRES_USER` who has access to all dbs
  - `GS_URL` contains address in GS where to store backups, without the `gs://` prefix
   - `bucket-name/directory`
- - `GS_ACCESS_KEY`
- - `GS_SECRET_KEY`
  - `CRON_SCHEDULE` cron schedule string, default '0 2 * * *'
 
